@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import Image from 'next/image';
 
 export default function Home() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -244,9 +245,11 @@ export default function Home() {
                 Developed a Tetris game on LED matrix with ESP32 microcontroller in C++. Created a responsive web interface for smartphone play via Wi-Fi with real-time WebSocket communication.
               </p>
               <div className="mb-4">
-                <img 
+                <Image 
                   src="/images/Tetris.webp" 
                   alt="TETRIS Game on LED Matrix" 
+                  width={400}
+                  height={192}
                   className="w-full h-48 object-cover rounded-lg mb-4 border border-slate-200 dark:border-slate-600"
                 />
               </div>
@@ -276,9 +279,11 @@ export default function Home() {
                 A Java-based 2D adventure game where players explore a labyrinth, collect keys to progress through levels, and battle monsters and ghosts. Features object-oriented programming principles and agile project management.
               </p>
               <div className="mb-4">
-                <img 
+                <Image 
                   src="/images/labyrinth-game.png" 
                   alt="Labyrinth Adventure Game Screenshot" 
+                  width={400}
+                  height={192}
                   className="w-full h-48 object-cover rounded-lg mb-4 border border-slate-200 dark:border-slate-600"
                 />
               </div>
@@ -308,9 +313,11 @@ export default function Home() {
                 Developed an automated path optimization system for LEGO Mindstorms EV3 robot. Implemented algorithmic optimization and mathematical modeling to determine optimal traversal paths, with automated control systems using MATLAB/Simulink.
               </p>
               <div className="mb-4">
-                <img 
+                <Image 
                   src="/images/robot.webp" 
                   alt="LEGO Mindstorms EV3 Robot" 
+                  width={400}
+                  height={192}
                   className="w-full h-48 object-cover rounded-lg mb-4 border border-slate-200 dark:border-slate-600"
                 />
               </div>
@@ -340,9 +347,11 @@ export default function Home() {
                 Developed a concurrent road traffic simulation in C using pthreads. Implemented thread management and synchronization algorithms to model and coordinate vehicle flows, avoiding conflicts in a multi-threaded environment.
               </p>
               <div className="mb-4">
-                <img 
+                <Image 
                   src="/images/traffic-simulation.png.webp" 
                   alt="Concurrent Traffic Simulation Grid" 
+                  width={400}
+                  height={192}
                   className="w-full h-48 object-cover rounded-lg mb-4 border border-slate-200 dark:border-slate-600"
                 />
               </div>
@@ -444,8 +453,8 @@ export default function Home() {
         <div className="max-w-4xl mx-auto text-center">
           <h2 className="text-4xl font-bold text-slate-900 dark:text-white mb-12">Get In Touch</h2>
           <p className="text-lg text-slate-600 dark:text-slate-300 mb-12">
-            I'm currently seeking a 6-month internship in development and artificial intelligence starting in late February. 
-            Let's discuss how I can contribute to your team's innovative projects.
+            I&apos;m currently seeking a 6-month internship in development and artificial intelligence starting in late February. 
+            Let&apos;s discuss how I can contribute to your team&apos;s innovative projects.
           </p>
           
           <div className="grid md:grid-cols-2 gap-8 mb-12">
