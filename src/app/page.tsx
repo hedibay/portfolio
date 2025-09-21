@@ -103,6 +103,14 @@ export default function Home() {
             >
               View My Work
             </button>
+            <a 
+              href="/cv-hedi-bayoudh.pdf"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-lg font-semibold transition-colors text-center"
+            >
+              Download CV
+            </a>
           </div>
         </div>
       </section>
@@ -517,6 +525,14 @@ export default function Home() {
               className="border-2 border-slate-900 dark:border-white text-slate-900 dark:text-white px-8 py-3 rounded-lg font-semibold hover:bg-slate-900 dark:hover:bg-white hover:text-white dark:hover:text-slate-900 transition-colors"
             >
               Connect on LinkedIn
+            </a>
+            <a 
+              href="/cv-hedi-bayoudh.pdf"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-lg font-semibold transition-colors"
+            >
+              Download CV
             </a>
           </div>
         </div>
