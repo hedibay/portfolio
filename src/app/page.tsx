@@ -270,7 +270,7 @@ export default function Home() {
               <div className="flex justify-between items-center">
                 <p className="text-sm text-slate-500 dark:text-slate-400">INP Lorraine Ensem • 2023-2024</p>
                 <a 
-                  href="https://drive.google.com/file/d/1bzUlAxYR8CuEdE7ERKmc37kFl5VT_mvC/view" 
+                  href="/Tetris.pdf" 
                   target="_blank" 
                   rel="noopener noreferrer"
                   className="bg-slate-900 dark:bg-white text-white dark:text-slate-900 px-4 py-2 rounded-lg text-sm font-semibold hover:bg-slate-800 dark:hover:bg-slate-100 transition-colors"
@@ -338,7 +338,7 @@ export default function Home() {
               <div className="flex justify-between items-center">
                 <p className="text-sm text-slate-500 dark:text-slate-400">Academic Project • 2023-2024</p>
                 <a 
-                  href="https://drive.google.com/file/d/1bzUlAxYR8CuEdE7ERKmc37kFl5VT_mvC/view" 
+                  href="/sami_rapport.pdf" 
                   target="_blank" 
                   rel="noopener noreferrer"
                   className="bg-slate-900 dark:bg-white text-white dark:text-slate-900 px-4 py-2 rounded-lg text-sm font-semibold hover:bg-slate-800 dark:hover:bg-slate-100 transition-colors"
@@ -408,7 +408,7 @@ export default function Home() {
             <div className="bg-white dark:bg-slate-800 p-8 rounded-lg shadow-lg">
               <h3 className="text-2xl font-bold text-slate-900 dark:text-white mb-6">AI & Machine Learning</h3>
               <div className="space-y-3">
-                {['PyTorch', 'TensorFlow', 'LangChain', 'LLM Agents', 'RAG', 'FastAPI'].map((skill) => (
+                {['PyTorch', 'TensorFlow', 'LangChain', 'LLM Agents', 'RAG', 'FastAPI', 'Machine Learning', 'Deep Learning', 'NLP'].map((skill) => (
                   <div key={skill} className="flex items-center">
                     <span className="w-2 h-2 bg-slate-600 dark:bg-slate-400 rounded-full mr-3"></span>
                     <span className="text-slate-600 dark:text-slate-300">{skill}</span>
