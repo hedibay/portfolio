@@ -1,10 +1,13 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Image from 'next/image';
+import { useLanguage } from '../contexts/LanguageContext';
 
 export default function Home() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isLanguageDropdownOpen, setIsLanguageDropdownOpen] = useState(false);
+  const { language, setLanguage, t } = useLanguage();
 
   const scrollToSection = (sectionId: string) => {
     const element = document.getElementById(sectionId);
@@ -12,7 +15,23 @@ export default function Home() {
       element.scrollIntoView({ behavior: 'smooth' });
     }
     setIsMenuOpen(false);
+    setIsLanguageDropdownOpen(false);
   };
+
+  // Close dropdowns when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      const target = event.target as HTMLElement;
+      if (!target.closest('.language-dropdown')) {
+        setIsLanguageDropdownOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-800">
@@ -25,22 +44,82 @@ export default function Home() {
             </div>
             
             {/* Desktop Menu */}
-            <div className="hidden md:flex space-x-8">
+            <div className="hidden md:flex space-x-8 items-center">
               <button onClick={() => scrollToSection('about')} className="text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white transition-colors">
-                About
+                {t.nav.about}
               </button>
               <button onClick={() => scrollToSection('experience')} className="text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white transition-colors">
-                Experience
+                {t.nav.experience}
               </button>
               <button onClick={() => scrollToSection('projects')} className="text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white transition-colors">
-                Projects
+                {t.nav.projects}
               </button>
               <button onClick={() => scrollToSection('skills')} className="text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white transition-colors">
-                Skills
+                {t.nav.skills}
               </button>
               <button onClick={() => scrollToSection('contact')} className="text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white transition-colors">
-                Contact
+                {t.nav.contact}
               </button>
+              {/* Language Dropdown */}
+              <div className="relative language-dropdown">
+                <button
+                  onClick={() => setIsLanguageDropdownOpen(!isLanguageDropdownOpen)}
+                  className="flex items-center space-x-2 text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white transition-colors text-sm font-medium px-3 py-1 rounded-md border border-slate-300 dark:border-slate-600"
+                >
+                  <Image
+                    src={language === 'en' ? '/uk.png' : '/france.png'}
+                    alt={language === 'en' ? 'UK Flag' : 'French Flag'}
+                    width={20}
+                    height={15}
+                    className="w-5 h-4 rounded-sm"
+                  />
+                  <span>{language === 'en' ? 'EN' : 'FR'}</span>
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </button>
+                
+                {isLanguageDropdownOpen && (
+                  <div className="absolute right-0 mt-2 w-32 bg-white dark:bg-slate-800 rounded-md shadow-lg border border-slate-200 dark:border-slate-700 z-50">
+                    <button
+                      onClick={() => {
+                        setLanguage('fr');
+                        setIsLanguageDropdownOpen(false);
+                      }}
+                      className={`w-full flex items-center space-x-3 px-4 py-2 text-sm hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors ${
+                        language === 'fr' ? 'bg-slate-100 dark:bg-slate-700' : ''
+                      }`}
+                    >
+                      <Image
+                        src="/france.png"
+                        alt="French Flag"
+                        width={20}
+                        height={15}
+                        className="w-5 h-4 rounded-sm"
+                      />
+                      <span>Français</span>
+                    </button>
+                    <button
+                      onClick={() => {
+                        setLanguage('en');
+                        setIsLanguageDropdownOpen(false);
+                      }}
+                      className={`w-full flex items-center space-x-3 px-4 py-2 text-sm hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors ${
+                        language === 'en' ? 'bg-slate-100 dark:bg-slate-700' : ''
+                      }`}
+                    >
+                      <Image
+                        src="/uk.png"
+                        alt="UK Flag"
+                        width={20}
+                        height={15}
+                        className="w-5 h-4 rounded-sm"
+                      />
+                      <span>English</span>
+                    </button>
+                  </div>
+                )}
+              </div>
             </div>
 
             {/* Mobile Menu Button */}
@@ -58,20 +137,62 @@ export default function Home() {
           {isMenuOpen && (
             <div className="md:hidden py-4 space-y-2 border-t border-slate-200 dark:border-slate-700">
               <button onClick={() => scrollToSection('about')} className="block w-full text-left px-4 py-2 text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white">
-                About
+                {t.nav.about}
               </button>
               <button onClick={() => scrollToSection('experience')} className="block w-full text-left px-4 py-2 text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white">
-                Experience
+                {t.nav.experience}
               </button>
               <button onClick={() => scrollToSection('projects')} className="block w-full text-left px-4 py-2 text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white">
-                Projects
+                {t.nav.projects}
               </button>
               <button onClick={() => scrollToSection('skills')} className="block w-full text-left px-4 py-2 text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white">
-                Skills
+                {t.nav.skills}
               </button>
               <button onClick={() => scrollToSection('contact')} className="block w-full text-left px-4 py-2 text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white">
-                Contact
+                {t.nav.contact}
               </button>
+              {/* Language Dropdown Mobile */}
+              <div className="border-t border-slate-200 dark:border-slate-700 mt-2 pt-2">
+                <div className="px-4 py-2 text-slate-600 dark:text-slate-300 text-sm font-medium">
+                  Langue / Language
+                </div>
+                <button
+                  onClick={() => {
+                    setLanguage('fr');
+                    setIsMenuOpen(false);
+                  }}
+                  className={`w-full flex items-center space-x-3 px-4 py-2 text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white transition-colors ${
+                    language === 'fr' ? 'bg-slate-100 dark:bg-slate-700' : ''
+                  }`}
+                >
+                  <Image
+                    src="/france.png"
+                    alt="French Flag"
+                    width={20}
+                    height={15}
+                    className="w-5 h-4 rounded-sm"
+                  />
+                  <span>Français</span>
+                </button>
+                <button
+                  onClick={() => {
+                    setLanguage('en');
+                    setIsMenuOpen(false);
+                  }}
+                  className={`w-full flex items-center space-x-3 px-4 py-2 text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white transition-colors ${
+                    language === 'en' ? 'bg-slate-100 dark:bg-slate-700' : ''
+                  }`}
+                >
+                  <Image
+                    src="/uk.png"
+                    alt="UK Flag"
+                    width={20}
+                    height={15}
+                    className="w-5 h-4 rounded-sm"
+                  />
+                  <span>English</span>
+                </button>
+              </div>
             </div>
           )}
         </div>
@@ -81,27 +202,26 @@ export default function Home() {
       <section className="pt-24 pb-16 px-4 sm:px-6 lg:px-8">
         <div className="max-w-6xl mx-auto text-center">
           <h1 className="text-5xl md:text-7xl font-bold text-slate-900 dark:text-white mb-6">
-            Hedi Bayoudh
+            {t.hero.title}
           </h1>
           <h2 className="text-2xl md:text-3xl text-slate-600 dark:text-slate-300 mb-8">
-            Future Computer Science & AI Engineer
+            {t.hero.subtitle}
           </h2>
           <p className="text-lg text-slate-600 dark:text-slate-400 mb-12 max-w-3xl mx-auto">
-            Final year engineering student in digital systems, seeking a 6-month internship in development and artificial intelligence. 
-            Passionate about contributing to innovative AI and software development projects.
+            {t.hero.description}
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <button 
               onClick={() => scrollToSection('contact')}
               className="bg-slate-900 dark:bg-white text-white dark:text-slate-900 px-8 py-3 rounded-lg font-semibold hover:bg-slate-800 dark:hover:bg-slate-100 transition-colors"
             >
-              Get In Touch
+              {t.hero.getInTouch}
             </button>
             <button 
               onClick={() => scrollToSection('projects')}
               className="border-2 border-slate-900 dark:border-white text-slate-900 dark:text-white px-8 py-3 rounded-lg font-semibold hover:bg-slate-900 dark:hover:bg-white hover:text-white dark:hover:text-slate-900 transition-colors"
             >
-              View My Work
+              {t.hero.viewMyWork}
             </button>
             <a 
               href="/cv-hedi-bayoudh.pdf"
@@ -109,7 +229,7 @@ export default function Home() {
               rel="noopener noreferrer"
               className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-lg font-semibold transition-colors text-center"
             >
-              Download CV
+              {t.hero.downloadCV}
             </a>
           </div>
         </div>
@@ -118,37 +238,37 @@ export default function Home() {
       {/* About Section */}
       <section id="about" className="py-16 px-4 sm:px-6 lg:px-8 bg-white dark:bg-slate-800">
         <div className="max-w-6xl mx-auto">
-          <h2 className="text-4xl font-bold text-center text-slate-900 dark:text-white mb-12">About Me</h2>
+          <h2 className="text-4xl font-bold text-center text-slate-900 dark:text-white mb-12">{t.about.title}</h2>
           <div className="grid md:grid-cols-2 gap-12 items-center">
             <div>
               <p className="text-lg text-slate-600 dark:text-slate-300 mb-6">
-                I am a final year engineering student in digital systems at INP Lorraine Ensem, specializing in the design and integration of digital systems that combine electronics, computer science, and networks.
+                {t.about.description1}
               </p>
               <p className="text-lg text-slate-600 dark:text-slate-300 mb-6">
-                With a strong foundation from my preparatory classes (MP) and hands-on experience in AI and web development, I am passionate about creating innovative solutions that bridge the gap between technology and real-world applications.
+                {t.about.description2}
               </p>
               <p className="text-lg text-slate-600 dark:text-slate-300">
-                I am currently seeking a 6-month internship starting in late February to apply my technical knowledge and contribute to cutting-edge projects in AI and software development.
+                {t.about.description3}
               </p>
             </div>
             <div className="bg-gradient-to-br from-slate-100 to-slate-200 dark:from-slate-700 dark:to-slate-600 p-8 rounded-lg">
-              <h3 className="text-2xl font-bold text-slate-900 dark:text-white mb-4">Quick Facts</h3>
+              <h3 className="text-2xl font-bold text-slate-900 dark:text-white mb-4">{t.about.quickFacts}</h3>
               <ul className="space-y-3 text-slate-600 dark:text-slate-300">
                 <li className="flex items-center">
                   <span className="w-2 h-2 bg-slate-600 dark:bg-slate-400 rounded-full mr-3"></span>
-                  Final year engineering student
+                  {t.about.fact1}
                 </li>
                 <li className="flex items-center">
                   <span className="w-2 h-2 bg-slate-600 dark:bg-slate-400 rounded-full mr-3"></span>
-                  Specialized in AI and digital systems
+                  {t.about.fact2}
                 </li>
                 <li className="flex items-center">
                   <span className="w-2 h-2 bg-slate-600 dark:bg-slate-400 rounded-full mr-3"></span>
-                  Fluent in French, English (C1 TOEIC 965), Arabic
+                  {t.about.fact3}
                 </li>
                 <li className="flex items-center">
                   <span className="w-2 h-2 bg-slate-600 dark:bg-slate-400 rounded-full mr-3"></span>
-                  Available for 6-month internship
+                  {t.about.fact4}
                 </li>
               </ul>
             </div>
@@ -159,25 +279,25 @@ export default function Home() {
       {/* Experience Section */}
       <section id="experience" className="py-16 px-4 sm:px-6 lg:px-8">
         <div className="max-w-6xl mx-auto">
-          <h2 className="text-4xl font-bold text-center text-slate-900 dark:text-white mb-12">Experience & Education</h2>
+          <h2 className="text-4xl font-bold text-center text-slate-900 dark:text-white mb-12">{t.experience.title}</h2>
           
           <div className="space-y-8">
             {/* Education */}
             <div className="bg-white dark:bg-slate-800 p-8 rounded-lg shadow-lg">
-              <h3 className="text-2xl font-bold text-slate-900 dark:text-white mb-6">Education</h3>
+              <h3 className="text-2xl font-bold text-slate-900 dark:text-white mb-6">{t.experience.education}</h3>
               <div className="space-y-6">
                 <div className="border-l-4 border-slate-600 dark:border-slate-400 pl-6">
-                  <h4 className="text-xl font-semibold text-slate-900 dark:text-white">Cycle ingénieur en système numérique</h4>
-                  <p className="text-slate-600 dark:text-slate-300">INP Lorraine Ensem • 2023-2026</p>
+                  <h4 className="text-xl font-semibold text-slate-900 dark:text-white">{t.experience.education1.title}</h4>
+                  <p className="text-slate-600 dark:text-slate-300">{t.experience.education1.school}</p>
                   <p className="text-slate-600 dark:text-slate-400 mt-2">
-                    Courses focused on the design and integration of digital systems combining electronics, computer science, and networks.
+                    {t.experience.education1.description}
                   </p>
                 </div>
                 <div className="border-l-4 border-slate-600 dark:border-slate-400 pl-6">
-                  <h4 className="text-xl font-semibold text-slate-900 dark:text-white">Classe préparatoire aux grandes écoles MP</h4>
-                  <p className="text-slate-600 dark:text-slate-300">Esprit-prépa Tunis • 2021-2023</p>
+                  <h4 className="text-xl font-semibold text-slate-900 dark:text-white">{t.experience.education2.title}</h4>
+                  <p className="text-slate-600 dark:text-slate-300">{t.experience.education2.school}</p>
                   <p className="text-slate-600 dark:text-slate-400 mt-2">
-                    Two years of preparatory classes focused on mathematics, physics, and computer science, preparing for engineering school entrance exams.
+                    {t.experience.education2.description}
                   </p>
                 </div>
               </div>
@@ -185,14 +305,14 @@ export default function Home() {
 
             {/* Professional Experience */}
             <div className="bg-white dark:bg-slate-800 p-8 rounded-lg shadow-lg">
-              <h3 className="text-2xl font-bold text-slate-900 dark:text-white mb-6">Professional Experience</h3>
+              <h3 className="text-2xl font-bold text-slate-900 dark:text-white mb-6">{t.experience.professional}</h3>
               <div className="border-l-4 border-slate-600 dark:border-slate-400 pl-6">
-                <h4 className="text-xl font-semibold text-slate-900 dark:text-white">Web Development & AI Intern</h4>
-                <p className="text-slate-600 dark:text-slate-300">Inoteqia, Tunis • Summer 2025</p>
+                <h4 className="text-xl font-semibold text-slate-900 dark:text-white">{t.experience.internship.title}</h4>
+                <p className="text-slate-600 dark:text-slate-300">{t.experience.internship.company}</p>
                 <ul className="text-slate-600 dark:text-slate-400 mt-2 space-y-1">
-                  <li>• Participated in the development and maintenance of the web application backend</li>
-                  <li>• Developed AI models and integrated them with FastAPI (LangChain, RAG)</li>
-                  <li>• Created and tested backend APIs in Spring Boot (Postman, IntelliJ IDEA)</li>
+                  <li>• {t.experience.internship.description1}</li>
+                  <li>• {t.experience.internship.description2}</li>
+                  <li>• {t.experience.internship.description3}</li>
                 </ul>
               </div>
             </div>
@@ -203,14 +323,14 @@ export default function Home() {
       {/* Projects Section */}
       <section id="projects" className="py-16 px-4 sm:px-6 lg:px-8 bg-white dark:bg-slate-800">
         <div className="max-w-6xl mx-auto">
-          <h2 className="text-4xl font-bold text-center text-slate-900 dark:text-white mb-12">Featured Projects</h2>
+          <h2 className="text-4xl font-bold text-center text-slate-900 dark:text-white mb-12">{t.projects.title}</h2>
           
           <div className="grid md:grid-cols-2 lg:grid-cols-2 gap-8">
             {/* Project 1 */}
             <div className="bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-700 dark:to-slate-600 p-8 rounded-lg shadow-lg">
-              <h3 className="text-2xl font-bold text-slate-900 dark:text-white mb-4">Elokencia - Smart Work Tool</h3>
+              <h3 className="text-2xl font-bold text-slate-900 dark:text-white mb-4">{t.projects.project1.title}</h3>
               <p className="text-slate-600 dark:text-slate-300 mb-4">
-                AI-powered platform for meeting analysis and smart work adaptation. Developed AI models for meeting analysis and integrated via FastAPI using LangChain and RAG.
+                {t.projects.project1.description}
               </p>
               <div className="flex flex-wrap gap-2 mb-4">
                 <span className="bg-slate-200 dark:bg-slate-600 text-slate-800 dark:text-slate-200 px-3 py-1 rounded-full text-sm">FastAPI</span>
@@ -218,14 +338,14 @@ export default function Home() {
                 <span className="bg-slate-200 dark:bg-slate-600 text-slate-800 dark:text-slate-200 px-3 py-1 rounded-full text-sm">RAG</span>
                 <span className="bg-slate-200 dark:bg-slate-600 text-slate-800 dark:text-slate-200 px-3 py-1 rounded-full text-sm">Spring Boot</span>
               </div>
-              <p className="text-sm text-slate-500 dark:text-slate-400">Inoteqia, Tunis • Summer 2025</p>
+              <p className="text-sm text-slate-500 dark:text-slate-400">{t.projects.project1.period}</p>
             </div>
 
             {/* Project 2 */}
             <div className="bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-700 dark:to-slate-600 p-8 rounded-lg shadow-lg">
-              <h3 className="text-2xl font-bold text-slate-900 dark:text-white mb-4">Real-time AI Chatbot</h3>
+              <h3 className="text-2xl font-bold text-slate-900 dark:text-white mb-4">{t.projects.project2.title}</h3>
               <p className="text-slate-600 dark:text-slate-300 mb-4">
-                Interactive real-time AI chatbot with intuitive interface, multilingual support, and personalized conversation modes (CV Critic, Language Tutor, etc.).
+                {t.projects.project2.description}
               </p>
               <div className="flex flex-wrap gap-2 mb-4">
                 <span className="bg-slate-200 dark:bg-slate-600 text-slate-800 dark:text-slate-200 px-3 py-1 rounded-full text-sm">Django</span>
@@ -234,23 +354,23 @@ export default function Home() {
                 <span className="bg-slate-200 dark:bg-slate-600 text-slate-800 dark:text-slate-200 px-3 py-1 rounded-full text-sm">WebSockets</span>
               </div>
               <div className="flex justify-between items-center">
-                <p className="text-sm text-slate-500 dark:text-slate-400">Personal Project • Summer 2025</p>
+                <p className="text-sm text-slate-500 dark:text-slate-400">{t.projects.project2.period}</p>
                 <a 
                   href="https://github.com/hedibay/django-react-langchain-chat" 
                   target="_blank" 
                   rel="noopener noreferrer"
                   className="bg-slate-900 dark:bg-white text-white dark:text-slate-900 px-4 py-2 rounded-lg text-sm font-semibold hover:bg-slate-800 dark:hover:bg-slate-100 transition-colors"
                 >
-                  View Project
+                  {t.projects.project2.viewProject}
                 </a>
               </div>
             </div>
 
             {/* Project 3 */}
             <div className="bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-700 dark:to-slate-600 p-8 rounded-lg shadow-lg">
-              <h3 className="text-2xl font-bold text-slate-900 dark:text-white mb-4">TETRIS for Everyone</h3>
+              <h3 className="text-2xl font-bold text-slate-900 dark:text-white mb-4">{t.projects.project3.title}</h3>
               <p className="text-slate-600 dark:text-slate-300 mb-4">
-                Developed a Tetris game on LED matrix with ESP32 microcontroller in C++. Created a responsive web interface for smartphone play via Wi-Fi with real-time WebSocket communication.
+                {t.projects.project3.description}
               </p>
               <div className="mb-4">
                 <Image 
@@ -268,23 +388,23 @@ export default function Home() {
                 <span className="bg-slate-200 dark:bg-slate-600 text-slate-800 dark:text-slate-200 px-3 py-1 rounded-full text-sm">Web Interface</span>
               </div>
               <div className="flex justify-between items-center">
-                <p className="text-sm text-slate-500 dark:text-slate-400">INP Lorraine Ensem • 2023-2024</p>
+                <p className="text-sm text-slate-500 dark:text-slate-400">{t.projects.project3.period}</p>
                 <a 
                   href="/Tetris.pdf" 
                   target="_blank" 
                   rel="noopener noreferrer"
                   className="bg-slate-900 dark:bg-white text-white dark:text-slate-900 px-4 py-2 rounded-lg text-sm font-semibold hover:bg-slate-800 dark:hover:bg-slate-100 transition-colors"
                 >
-                  View Project
+                  {t.projects.project3.viewProject}
                 </a>
               </div>
             </div>
 
             {/* Project 4 */}
             <div className="bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-700 dark:to-slate-600 p-8 rounded-lg shadow-lg">
-              <h3 className="text-2xl font-bold text-slate-900 dark:text-white mb-4">Labyrinth Adventure Game</h3>
+              <h3 className="text-2xl font-bold text-slate-900 dark:text-white mb-4">{t.projects.project4.title}</h3>
               <p className="text-slate-600 dark:text-slate-300 mb-4">
-                A Java-based 2D adventure game where players explore a labyrinth, collect keys to progress through levels, and battle monsters and ghosts. Features object-oriented programming principles and agile project management.
+                {t.projects.project4.description}
               </p>
               <div className="mb-4">
                 <Image 
@@ -302,23 +422,23 @@ export default function Home() {
                 <span className="bg-slate-200 dark:bg-slate-600 text-slate-800 dark:text-slate-200 px-3 py-1 rounded-full text-sm">Maven</span>
               </div>
               <div className="flex justify-between items-center">
-                <p className="text-sm text-slate-500 dark:text-slate-400">Academic Project • 2023-2024</p>
+                <p className="text-sm text-slate-500 dark:text-slate-400">{t.projects.project4.period}</p>
                 <a 
                   href="https://github.com/uzi-belfayez/ACL_Project" 
                   target="_blank" 
                   rel="noopener noreferrer"
                   className="bg-slate-900 dark:bg-white text-white dark:text-slate-900 px-4 py-2 rounded-lg text-sm font-semibold hover:bg-slate-800 dark:hover:bg-slate-100 transition-colors"
                 >
-                  View Project
+                  {t.projects.project4.viewProject}
                 </a>
               </div>
             </div>
 
             {/* Project 5 */}
             <div className="bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-700 dark:to-slate-600 p-8 rounded-lg shadow-lg">
-              <h3 className="text-2xl font-bold text-slate-900 dark:text-white mb-4">Robot Path Optimization</h3>
+              <h3 className="text-2xl font-bold text-slate-900 dark:text-white mb-4">{t.projects.project5.title}</h3>
               <p className="text-slate-600 dark:text-slate-300 mb-4">
-                Developed an automated path optimization system for LEGO Mindstorms EV3 robot. Implemented algorithmic optimization and mathematical modeling to determine optimal traversal paths, with automated control systems using MATLAB/Simulink.
+                {t.projects.project5.description}
               </p>
               <div className="mb-4">
                 <Image 
@@ -336,23 +456,23 @@ export default function Home() {
                 <span className="bg-slate-200 dark:bg-slate-600 text-slate-800 dark:text-slate-200 px-3 py-1 rounded-full text-sm">Robotics</span>
               </div>
               <div className="flex justify-between items-center">
-                <p className="text-sm text-slate-500 dark:text-slate-400">Academic Project • 2023-2024</p>
+                <p className="text-sm text-slate-500 dark:text-slate-400">{t.projects.project5.period}</p>
                 <a 
                   href="/sami_rapport.pdf" 
                   target="_blank" 
                   rel="noopener noreferrer"
                   className="bg-slate-900 dark:bg-white text-white dark:text-slate-900 px-4 py-2 rounded-lg text-sm font-semibold hover:bg-slate-800 dark:hover:bg-slate-100 transition-colors"
                 >
-                  View Project
+                  {t.projects.project5.viewProject}
                 </a>
               </div>
             </div>
 
             {/* Project 6 */}
             <div className="bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-700 dark:to-slate-600 p-8 rounded-lg shadow-lg">
-              <h3 className="text-2xl font-bold text-slate-900 dark:text-white mb-4">Concurrent Traffic Simulation</h3>
+              <h3 className="text-2xl font-bold text-slate-900 dark:text-white mb-4">{t.projects.project6.title}</h3>
               <p className="text-slate-600 dark:text-slate-300 mb-4">
-                Developed a concurrent road traffic simulation in C using pthreads. Implemented thread management and synchronization algorithms to model and coordinate vehicle flows, avoiding conflicts in a multi-threaded environment.
+                {t.projects.project6.description}
               </p>
               <div className="mb-4">
                 <Image 
@@ -370,14 +490,14 @@ export default function Home() {
                 <span className="bg-slate-200 dark:bg-slate-600 text-slate-800 dark:text-slate-200 px-3 py-1 rounded-full text-sm">Synchronization</span>
               </div>
               <div className="flex justify-between items-center">
-                <p className="text-sm text-slate-500 dark:text-slate-400">Academic Project • 2023-2024</p>
+                <p className="text-sm text-slate-500 dark:text-slate-400">{t.projects.project6.period}</p>
                 <a 
                   href="https://github.com/hedibay/traffic-simulation" 
                   target="_blank" 
                   rel="noopener noreferrer"
                   className="bg-slate-900 dark:bg-white text-white dark:text-slate-900 px-4 py-2 rounded-lg text-sm font-semibold hover:bg-slate-800 dark:hover:bg-slate-100 transition-colors"
                 >
-                  View Project
+                  {t.projects.project6.viewProject}
                 </a>
               </div>
             </div>
@@ -388,12 +508,12 @@ export default function Home() {
       {/* Skills Section */}
       <section id="skills" className="py-16 px-4 sm:px-6 lg:px-8">
         <div className="max-w-6xl mx-auto">
-          <h2 className="text-4xl font-bold text-center text-slate-900 dark:text-white mb-12">Technical Skills</h2>
+          <h2 className="text-4xl font-bold text-center text-slate-900 dark:text-white mb-12">{t.skills.title}</h2>
           
           <div className="grid md:grid-cols-3 gap-8">
             {/* Programming Languages */}
             <div className="bg-white dark:bg-slate-800 p-8 rounded-lg shadow-lg">
-              <h3 className="text-2xl font-bold text-slate-900 dark:text-white mb-6">Programming Languages</h3>
+              <h3 className="text-2xl font-bold text-slate-900 dark:text-white mb-6">{t.skills.programmingLanguages}</h3>
               <div className="space-y-3">
                 {['Java', 'JavaScript', 'Python', 'C++', 'C', 'SQL', 'VHDL', 'CSS', 'MatLab'].map((skill) => (
                   <div key={skill} className="flex items-center">
@@ -406,7 +526,7 @@ export default function Home() {
 
             {/* AI & Machine Learning */}
             <div className="bg-white dark:bg-slate-800 p-8 rounded-lg shadow-lg">
-              <h3 className="text-2xl font-bold text-slate-900 dark:text-white mb-6">AI & Machine Learning</h3>
+              <h3 className="text-2xl font-bold text-slate-900 dark:text-white mb-6">{t.skills.ai}</h3>
               <div className="space-y-3">
                 {['PyTorch', 'TensorFlow', 'LangChain', 'LLM Agents', 'RAG', 'FastAPI', 'Machine Learning', 'Deep Learning', 'NLP'].map((skill) => (
                   <div key={skill} className="flex items-center">
@@ -419,7 +539,7 @@ export default function Home() {
 
             {/* Tools & Frameworks */}
             <div className="bg-white dark:bg-slate-800 p-8 rounded-lg shadow-lg">
-              <h3 className="text-2xl font-bold text-slate-900 dark:text-white mb-6">Tools & Frameworks</h3>
+              <h3 className="text-2xl font-bold text-slate-900 dark:text-white mb-6">{t.skills.tools}</h3>
               <div className="space-y-3">
                 {['Django', 'React', 'Spring Boot', 'Git', 'Docker', 'Postman', 'IntelliJ IDEA'].map((skill) => (
                   <div key={skill} className="flex items-center">
@@ -433,23 +553,23 @@ export default function Home() {
 
           {/* Languages */}
           <div className="mt-12 bg-white dark:bg-slate-800 p-8 rounded-lg shadow-lg">
-            <h3 className="text-2xl font-bold text-slate-900 dark:text-white mb-6 text-center">Languages</h3>
+            <h3 className="text-2xl font-bold text-slate-900 dark:text-white mb-6 text-center">{t.skills.languages}</h3>
             <div className="grid md:grid-cols-4 gap-6 text-center">
               <div>
-                <h4 className="text-lg font-semibold text-slate-900 dark:text-white">Arabic</h4>
-                <p className="text-slate-600 dark:text-slate-300">Native</p>
+                <h4 className="text-lg font-semibold text-slate-900 dark:text-white">{t.skills.arabic}</h4>
+                <p className="text-slate-600 dark:text-slate-300">{t.skills.native}</p>
               </div>
               <div>
-                <h4 className="text-lg font-semibold text-slate-900 dark:text-white">French</h4>
-                <p className="text-slate-600 dark:text-slate-300">Advanced</p>
+                <h4 className="text-lg font-semibold text-slate-900 dark:text-white">{t.skills.french}</h4>
+                <p className="text-slate-600 dark:text-slate-300">{t.skills.advanced}</p>
               </div>
               <div>
-                <h4 className="text-lg font-semibold text-slate-900 dark:text-white">English</h4>
+                <h4 className="text-lg font-semibold text-slate-900 dark:text-white">{t.skills.english}</h4>
                 <p className="text-slate-600 dark:text-slate-300">C1 TOEIC 965</p>
               </div>
               <div>
-                <h4 className="text-lg font-semibold text-slate-900 dark:text-white">German</h4>
-                <p className="text-slate-600 dark:text-slate-300">Beginner</p>
+                <h4 className="text-lg font-semibold text-slate-900 dark:text-white">{t.skills.german}</h4>
+                <p className="text-slate-600 dark:text-slate-300">{t.skills.beginner}</p>
               </div>
             </div>
           </div>
@@ -459,15 +579,14 @@ export default function Home() {
       {/* Contact Section */}
       <section id="contact" className="py-16 px-4 sm:px-6 lg:px-8 bg-white dark:bg-slate-800">
         <div className="max-w-4xl mx-auto text-center">
-          <h2 className="text-4xl font-bold text-slate-900 dark:text-white mb-12">Get In Touch</h2>
+          <h2 className="text-4xl font-bold text-slate-900 dark:text-white mb-12">{t.contact.title}</h2>
           <p className="text-lg text-slate-600 dark:text-slate-300 mb-12">
-            I&apos;m currently seeking a 6-month internship in development and artificial intelligence starting in late February. 
-            Let&apos;s discuss how I can contribute to your team&apos;s innovative projects.
+            {t.contact.description}
           </p>
           
           <div className="grid md:grid-cols-2 gap-8 mb-12">
             <div className="bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-700 dark:to-slate-600 p-8 rounded-lg">
-              <h3 className="text-2xl font-bold text-slate-900 dark:text-white mb-4">Contact Information</h3>
+              <h3 className="text-2xl font-bold text-slate-900 dark:text-white mb-4">{t.contact.contactInfo}</h3>
               <div className="space-y-4 text-left">
                 <div className="flex items-center">
                   <span className="w-6 h-6 mr-3 text-slate-600 dark:text-slate-400">📧</span>
@@ -493,18 +612,18 @@ export default function Home() {
             </div>
             
             <div className="bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-700 dark:to-slate-600 p-8 rounded-lg">
-              <h3 className="text-2xl font-bold text-slate-900 dark:text-white mb-4">Availability</h3>
+              <h3 className="text-2xl font-bold text-slate-900 dark:text-white mb-4">{t.contact.availability}</h3>
               <div className="space-y-4 text-left">
                 <div>
-                  <h4 className="font-semibold text-slate-900 dark:text-white">Internship Duration</h4>
+                  <h4 className="font-semibold text-slate-900 dark:text-white">{t.contact.internshipDuration}</h4>
                   <p className="text-slate-600 dark:text-slate-300">6 months</p>
                 </div>
                 <div>
-                  <h4 className="font-semibold text-slate-900 dark:text-white">Start Date</h4>
+                  <h4 className="font-semibold text-slate-900 dark:text-white">{t.contact.startDate}</h4>
                   <p className="text-slate-600 dark:text-slate-300">Late February 2025</p>
                 </div>
                 <div>
-                  <h4 className="font-semibold text-slate-900 dark:text-white">Focus Areas</h4>
+                  <h4 className="font-semibold text-slate-900 dark:text-white">{t.contact.focusAreas}</h4>
                   <p className="text-slate-600 dark:text-slate-300">AI Development, Web Development, Software Engineering</p>
                 </div>
               </div>
@@ -516,7 +635,7 @@ export default function Home() {
               href="mailto:hedi.bayoudh4@gmail.com"
               className="bg-slate-900 dark:bg-white text-white dark:text-slate-900 px-8 py-3 rounded-lg font-semibold hover:bg-slate-800 dark:hover:bg-slate-100 transition-colors"
             >
-              Send Email
+              {t.contact.sendEmail}
             </a>
             <a 
               href="https://www.linkedin.com/in/hedi-bayoudh"
@@ -524,7 +643,7 @@ export default function Home() {
               rel="noopener noreferrer"
               className="border-2 border-slate-900 dark:border-white text-slate-900 dark:text-white px-8 py-3 rounded-lg font-semibold hover:bg-slate-900 dark:hover:bg-white hover:text-white dark:hover:text-slate-900 transition-colors"
             >
-              Connect on LinkedIn
+              {t.contact.connectLinkedIn}
             </a>
             <a 
               href="/cv-hedi-bayoudh.pdf"
@@ -532,7 +651,7 @@ export default function Home() {
               rel="noopener noreferrer"
               className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-lg font-semibold transition-colors"
             >
-              Download CV
+              {t.contact.downloadCV}
             </a>
           </div>
         </div>
@@ -542,7 +661,7 @@ export default function Home() {
       <footer className="bg-slate-900 dark:bg-slate-950 text-white py-8 px-4 sm:px-6 lg:px-8">
         <div className="max-w-6xl mx-auto text-center">
           <p className="text-slate-400">
-            © 2025 Hedi Bayoudh. All rights reserved.
+            {t.footer.copyright}
           </p>
         </div>
       </footer>
